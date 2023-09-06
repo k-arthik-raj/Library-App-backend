@@ -24,6 +24,9 @@ const userController = {
       res.status(500).json({ message: 'Error logging in', error: error.message });
     }
   },
+
+  //... Other user related controller methods
+
 };
 
 module.exports = userController;

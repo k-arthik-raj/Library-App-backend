@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
 const bookSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -8,8 +9,8 @@ const bookSchema = new mongoose.Schema({
   image: { type: String },// Store base64 encoded image data
   copies: [
     {
-      copyId: { type: String, required: true }, // Unique identifier for each copy
-      status: { type: Boolean, default: true },
+      copyId: { type: String, default: () => uuidv4() }, // Default to a new UUID
+      status: { type: Boolean, default: true }, // Default status to true
     },
   ],
 });

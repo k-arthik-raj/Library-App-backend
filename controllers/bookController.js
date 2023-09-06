@@ -1,5 +1,6 @@
 const Book = require('../models/bookModel');
 const BorrowedBook = require('../models/borrowedBookModel');
+const { v4: uuidv4 } = require('uuid');
 
 const bookController = {
   getAllBooks: async (req, res) => {
@@ -36,12 +37,37 @@ const bookController = {
         author,
         publisher,
         image,
-        copies,
+        copies : [{}],
       });
 
       res.status(201).json({ message: 'Book created successfully', book });
     } catch (error) {
       res.status(500).json({ message: 'Error creating book', error: error.message });
+    }
+  },
+
+  addCopy: async (req, res) => {
+    try {
+        const bookId = req.params.id;
+        const book = await Book.findById(bookId);
+        if (!book) {
+          res.status(404).json({ message: 'Book not found' });
+        }
+      
+      const newCopy = {
+        copyId: uuidv4(), // Generate a new UUID for the copyId
+        status: true, // Default status to true
+      };
+  
+      // Add the new copy to the copies array of the book
+      book.copies.push(newCopy);
+  
+      // Save the updated book back to the database
+      await book.save();
+      
+      res.status(201).json({ message: 'Copy added successfully', book }); 
+    } catch (error) {
+      res.status(500).json({ message: 'Error adding copy', error: error.message });
     }
   },
 
@@ -57,7 +83,12 @@ const bookController = {
       }
 
       // Delete the book
-      await book.remove();
+      await Book.deleteOne({ _id: bookId });
+
+
+      // Another possible function to delete
+      // await Book.findByIdAndDelete(bookId);
+
 
       res.json({ message: 'Book deleted successfully' });
     } catch (error) {
@@ -127,6 +158,7 @@ const bookController = {
       res.status(500).json({ message: 'Error returning book', error: error.message });
     }
   },
+  
   // ... other book-related controller methods
 };
 

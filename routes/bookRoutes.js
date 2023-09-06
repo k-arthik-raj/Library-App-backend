@@ -16,6 +16,12 @@ router.get('/:id', bookController.getBookById);
 // Create a book
 router.post('/add', bookController.createBook);
 
+// Add a copy
+router.put('/addCopy/:id', bookController.addCopy);
+
+// Delete a book
+router.delete('/delete/:id', bookController.deleteBook);
+
 // Borrow a book route
 router.post('/borrow/:id', bookController.borrowBook);
 

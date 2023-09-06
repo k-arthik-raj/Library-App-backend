@@ -71,7 +71,9 @@ const borrowedBookController = {
       res.status(500).json({ message: 'Error returning book', error: error.message });
     }
   },
+
   // ... other borrowed book-related controller methods
+
 };
 
 module.exports = borrowedBookController;
