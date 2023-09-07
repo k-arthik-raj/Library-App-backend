@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
 
 const userController = {
   registerUser: async (req, res) => {
@@ -15,8 +16,20 @@ const userController = {
     try {
       const { username, password } = req.body;
       const user = await User.findOne({ username, password });
+      
       if (user) {
-        res.json({ success: true });
+        // User exists and credentials are valid
+        // Define the payload including the user's role (is_admin)
+        const payload = {
+          userId: user._id,
+          is_admin: user.is_admin, // Include the user's role
+        };
+        
+        // Generate a JWT token with the payload
+        // Modify the secret key
+        const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '1h' });
+        
+        res.json({ success: true, token }); 
       } else {
         res.json({ success: false });
       }
